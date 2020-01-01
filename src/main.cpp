@@ -1,21 +1,6 @@
 #include <iostream>
-#include "CommandHandler.h"
 #include "ArgumentList.h"
 #include "Interpreter.h"
-
-class ConsoleCommand : public Command
-{
-public:
-    ConsoleCommand()
-        : Command("console")
-    {}
-
-    bool run() override
-    {
-        std::cout << "Console Command called." << std::endl;
-        return true;
-    }
-};
 
 int main(int argc, char** argv) {
     while (true)
@@ -24,8 +9,6 @@ int main(int argc, char** argv) {
         std::string input;
         std::getline(std::cin, input);
         ArgumentList al = Interpreter::compileCommand(input);
-        //CommandHandler hCmd;
-        //hCmd.registerCommand(new ConsoleCommand);
 
         if (al.isValid())
         {
