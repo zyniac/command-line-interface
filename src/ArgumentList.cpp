@@ -69,3 +69,13 @@ bool ArgumentList::hasArgument(const char* name)
 {
     return this->isArgument(name);
 }
+
+size_t ArgumentList::getBoth(const char* full, const char* shorten)
+{
+    auto itr = std::find_if(this->arguments.begin(), this->arguments.end(), [&](Argument& argument) {
+        return (argument.getName() == full && argument.getStatus() == Argument::ArgumentStatus::WRITTEN_OUT)
+                || (argument.getName() == shorten && argument.getStatus() == Argument::ArgumentStatus::COMPACT);
+    });
+
+    return itr - this->arguments.begin();
+}

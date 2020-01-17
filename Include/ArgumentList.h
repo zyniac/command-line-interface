@@ -20,6 +20,7 @@ public:
     bool isArgument(const char* name);
     bool hasArgument(const char* name);
     void setInvalid();
+    size_t getBoth(const char* full, const char* shorten);
     Argument& operator[](size_t count);
     size_t size();
     std::string getInvoke();
