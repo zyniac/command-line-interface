@@ -64,3 +64,8 @@ std::string ArgumentList::getInvoke()
 {
     return this->invoke;
 }
+
+bool ArgumentList::hasArgument(const char* name)
+{
+    return this->isArgument(name);
+}

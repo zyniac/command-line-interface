@@ -1,6 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
+include(../../cmake/build.cmake)
 
-project(ZyniacCommandInterface VERSION 0.1 DESCRIPTION "The Command Interface for Zyniac")
+# Project Values:
+set(PROJECT_NAME z-command-interface)
+set(PROJECT_VERSION 0.1)
+set(PROJECT_DESCRIPTION "Command Interface created for Zyniac")
+set(PROJECT_TEST test_interface)
+set(PROJECT_LIB command-line-interface)
+#----------------
+
+add_definitions(-DCMD_MIN_LENGTH=2)
+
+project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} DESCRIPTION ${PROJECT_DESCRIPTION})
 
 if(DEFINED $ENV{Boost_ROOT}) # Windows Boost Path
 	cmake_policy(SET CMP0074 NEW)
@@ -10,54 +21,27 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
+list(APPEND LibraryDirs ${CMAKE_BINARY_DIR})
+
 set(MADE_BUILD FALSE)
 set(MADE_TEST_BUILD FALSE)
 set(MADE_LIBRARY_BUILD FALSE)
 
-# ---------------------------------
+message(STATUS ${DEFINES})
 
-# This function points to the include directories. It is nomally included in genexe and genlib
-function(addincdirs linkname)
-    target_include_directories(${linkname} PUBLIC ${IncludeDirs})
-    target_link_directories(${linkname} PUBLIC ${LibraryDirs})
-    target_link_libraries(${linkname} PUBLIC ${Libraries})
-    target_compile_definitions(${linkname} PUBLIC PRERESERVE_COMMANDS=5 CMD_MIN_LENGTH=2)
-    set_target_properties(${linkname} PROPERTIES
-                CXX_STANDARD 17
-                CXX_STANDARD_REQUIRED ON)
-endfunction()
-
-# Generates a test executeable and points to the include files to compile the project correctly
-function(genexe)
-    add_executable(testexe ${ExeFiles})
-    addincdirs(testexe)
-    set(MADE_BUILD TRUE PARENT_SCOPE)
-    set(MADE_TEST_BUILD TRUE PARENT_SCOPE)
-endfunction()
-
-# Generates the library and points to the include files to compile the project correctly
-function(genlib)
-    add_library(commandinterpreter ${LibFiles})
-    addincdirs(commandinterpreter)
-    set(MADE_BUILD TRUE PARENT_SCOPE)
-    set(MADE_LIBRARY_BUILD TRUE PARENT_SCOPE)
-endfunction()
-
-# ---------------------------------
-
-set(IncludeDir "${CMAKE_SOURCE_DIR}/Include/")
-set(SourceDir "${CMAKE_SOURCE_DIR}/src/")
+set(IncludeDir "${CMAKE_CURRENT_SOURCE_DIR}/Include/")
+set(SourceDir "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 
 find_package(Boost REQUIRED)
 
-set(IncludeDirs ${IncludeDir} ${Boost_INCLUDE_DIRS})
-set(LibraryDirs ${Boost_LIBRARY_DIRS})
-set(Libraries ${Boost_LIBRARIES})
+set(IncludeDirs ${IncludeDirs} ${IncludeDir} ${Boost_INCLUDE_DIRS})
+set(LibraryDirs ${LibraryDirs} ${Boost_LIBRARY_DIRS})
+set(Libraries ${Libraries} ${Boost_LIBRARIES})
 
 file(GLOB_RECURSE IncludeFiles "${IncludeDir}*.h")
 file(GLOB_RECURSE SourceFiles "${SourceDir}*.cpp")
 
-set(MainFile "${CMAKE_SOURCE_DIR}/src/main.cpp")
+set(MainFile "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 
 set(LibFiles ${SourceFiles})
 set(ExeFiles ${IncludeFiles} ${SourceFiles})

@@ -18,6 +18,7 @@ public:
     bool isValid();
     size_t getArgument(const char* name);
     bool isArgument(const char* name);
+    bool hasArgument(const char* name);
     void setInvalid();
     Argument& operator[](size_t count);
     size_t size();
